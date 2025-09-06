@@ -11,7 +11,10 @@ import {
   Play,
   Settings,
   Download,
-  Trash2
+  Trash2,
+  FileSearch,
+  Power,
+  PowerOff
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
@@ -26,6 +29,7 @@ interface SiteData {
   pageSize: number; // in MB
   imageCount: number;
   heavyImages: number;
+  isActive: boolean;
   limits: {
     imageSize: number; // in KB
     pageSize: number; // in MB
@@ -39,9 +43,11 @@ interface SiteCardProps {
   onSettings?: (siteId: string) => void;
   onDownload?: (siteId: string) => void;
   onDelete?: (siteId: string) => void;
+  onViewLogs?: (siteId: string) => void;
+  onToggleActive?: (siteId: string) => void;
 }
 
-const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete }: SiteCardProps) => {
+const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, onToggleActive }: SiteCardProps) => {
   const getStatusIcon = () => {
     switch (site.status) {
       case "success":
@@ -80,14 +86,22 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete }: SiteCardPr
   return (
     <Card className={cn(
       "transition-all duration-200 hover:shadow-elevation-lg border-2",
-      getCardStyles()
+      getCardStyles(),
+      !site.isActive && "opacity-50 grayscale"
     )}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {getStatusIcon()}
             <div>
-              <h3 className="font-semibold text-lg">{site.name}</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold text-lg">{site.name}</h3>
+                {site.isActive ? (
+                  <Power className="h-3 w-3 text-success" />
+                ) : (
+                  <PowerOff className="h-3 w-3 text-muted-foreground" />
+                )}
+              </div>
               <p className="text-sm text-muted-foreground flex items-center gap-1">
                 <Globe className="h-3 w-3" />
                 {site.url}
@@ -144,10 +158,11 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete }: SiteCardPr
           </div>
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex gap-1.5">
           <Button 
             size="sm" 
             onClick={() => onScan?.(site.id)}
+            disabled={!site.isActive}
             className="flex-1"
           >
             <Play className="h-3 w-3 mr-1" />
@@ -156,7 +171,28 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete }: SiteCardPr
           <Button 
             size="sm" 
             variant="outline" 
+            onClick={() => onViewLogs?.(site.id)}
+            title="Ver logs"
+          >
+            <FileSearch className="h-3 w-3" />
+          </Button>
+          <Button 
+            size="sm" 
+            variant="outline" 
+            onClick={() => onToggleActive?.(site.id)}
+            title={site.isActive ? "Desactivar sitio" : "Activar sitio"}
+          >
+            {site.isActive ? (
+              <PowerOff className="h-3 w-3" />
+            ) : (
+              <Power className="h-3 w-3" />
+            )}
+          </Button>
+          <Button 
+            size="sm" 
+            variant="outline" 
             onClick={() => onSettings?.(site.id)}
+            title="Configuración"
           >
             <Settings className="h-3 w-3" />
           </Button>
@@ -164,6 +200,7 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete }: SiteCardPr
             size="sm" 
             variant="outline" 
             onClick={() => onDownload?.(site.id)}
+            title="Descargar reporte"
           >
             <Download className="h-3 w-3" />
           </Button>
@@ -171,6 +208,7 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete }: SiteCardPr
             size="sm" 
             variant="outline" 
             onClick={() => onDelete?.(site.id)}
+            title="Eliminar sitio"
           >
             <Trash2 className="h-3 w-3" />
           </Button>
