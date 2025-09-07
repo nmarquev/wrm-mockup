@@ -165,8 +165,7 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, 
             disabled={!site.isActive}
             className="flex-1"
           >
-            <Play className="h-3 w-3 mr-1" />
-            Escanear
+            <Play className="h-3 w-3" />
           </Button>
           <Button 
             size="sm" 
