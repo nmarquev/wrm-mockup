@@ -92,7 +92,8 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, 
   return (
     <Card className={cn(
       "transition-all duration-200 hover:shadow-elevation-lg border-2",
-      getCardStyles()
+      getCardStyles(),
+      !site.isActive && "opacity-50 grayscale"
     )}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
@@ -172,50 +173,60 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, 
           >
             <Play className="h-3 w-3" />
           </Button>
-          <Button 
-            size="sm" 
-            variant="outline" 
-            onClick={() => onViewLogs?.(site.id)}
-            title="Ver logs"
-          >
-            <FileSearch className="h-3 w-3" />
-          </Button>
-          <Button 
-            size="sm" 
-            variant="outline" 
-            onClick={() => onToggleActive?.(site.id)}
-            title={site.isActive ? "Desactivar sitio" : "Activar sitio"}
-          >
-            {site.isActive ? (
-              <PowerOff className="h-3 w-3" />
-            ) : (
-              <Power className="h-3 w-3" />
-            )}
-          </Button>
-          <Button 
-            size="sm" 
-            variant="outline" 
-            onClick={() => onSettings?.(site.id)}
-            title="Configuración"
-          >
-            <Settings className="h-3 w-3" />
-          </Button>
-          <Button 
-            size="sm" 
-            variant="outline" 
-            onClick={() => onDownload?.(site.id)}
-            title="Descargar reporte"
-          >
-            <Download className="h-3 w-3" />
-          </Button>
-          <Button 
-            size="sm" 
-            variant="outline" 
-            onClick={() => onDelete?.(site.id)}
-            title="Eliminar sitio"
-          >
-            <Trash2 className="h-3 w-3" />
-          </Button>
+          <div className={cn(!site.isActive && "filter-none opacity-100")}>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={() => onViewLogs?.(site.id)}
+              title="Ver logs"
+            >
+              <FileSearch className="h-3 w-3" />
+            </Button>
+          </div>
+          <div className={cn(!site.isActive && "filter-none opacity-100")}>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={() => onToggleActive?.(site.id)}
+              title={site.isActive ? "Desactivar sitio" : "Activar sitio"}
+            >
+              {site.isActive ? (
+                <PowerOff className="h-3 w-3" />
+              ) : (
+                <Power className="h-3 w-3" />
+              )}
+            </Button>
+          </div>
+          <div className={cn(!site.isActive && "filter-none opacity-100")}>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={() => onSettings?.(site.id)}
+              title="Configuración"
+            >
+              <Settings className="h-3 w-3" />
+            </Button>
+          </div>
+          <div className={cn(!site.isActive && "filter-none opacity-100")}>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={() => onDownload?.(site.id)}
+              title="Descargar reporte"
+            >
+              <Download className="h-3 w-3" />
+            </Button>
+          </div>
+          <div className={cn(!site.isActive && "filter-none opacity-100")}>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={() => onDelete?.(site.id)}
+              title="Eliminar sitio"
+            >
+              <Trash2 className="h-3 w-3" />
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
