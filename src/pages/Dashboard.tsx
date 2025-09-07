@@ -70,21 +70,21 @@ const mockSites = [
 
 const Dashboard = () => {
   const [searchValue, setSearchValue] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [activeFilter, setActiveFilter] = useState("all");
+  const [combinedFilter, setCombinedFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const sitesPerPage = 12;
+  const [sitesPerPage, setSitesPerPage] = useState(12);
   const { toast } = useToast();
   
   const filteredSites = mockSites.filter(site => {
     const matchesSearch = site.name.toLowerCase().includes(searchValue.toLowerCase()) ||
                          site.url.toLowerCase().includes(searchValue.toLowerCase());
-    const matchesStatus = statusFilter === "all" || site.status === statusFilter;
-    const matchesActive = activeFilter === "all" || 
-                         (activeFilter === "active" && site.isActive) ||
-                         (activeFilter === "inactive" && !site.isActive);
     
-    return matchesSearch && matchesStatus && matchesActive;
+    if (combinedFilter === "all") return matchesSearch;
+    if (combinedFilter === "active-warning") return matchesSearch && site.isActive && site.status === "warning";
+    if (combinedFilter === "active-error") return matchesSearch && site.isActive && site.status === "error";
+    if (combinedFilter === "inactive") return matchesSearch && !site.isActive;
+    
+    return matchesSearch;
   });
 
   const totalPages = Math.ceil(filteredSites.length / sitesPerPage);
@@ -196,32 +196,32 @@ const Dashboard = () => {
             
             {/* Filters */}
             <div className="flex flex-wrap gap-3">
-              <Select value={statusFilter} onValueChange={(value) => {
-                setStatusFilter(value);
+              <Select value={combinedFilter} onValueChange={(value) => {
+                setCombinedFilter(value);
                 setCurrentPage(1);
               }}>
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Estado" />
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filtrar sitios" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="success">Correctos</SelectItem>
-                  <SelectItem value="warning">Avisos</SelectItem>
-                  <SelectItem value="error">Problemas</SelectItem>
+                  <SelectItem value="all">Todos los sitios</SelectItem>
+                  <SelectItem value="active-error">Activos con problemas</SelectItem>
+                  <SelectItem value="active-warning">Activos con avisos</SelectItem>
+                  <SelectItem value="inactive">Sitios inactivos</SelectItem>
                 </SelectContent>
               </Select>
               
-              <Select value={activeFilter} onValueChange={(value) => {
-                setActiveFilter(value);
+              <Select value={sitesPerPage.toString()} onValueChange={(value) => {
+                setSitesPerPage(Number(value));
                 setCurrentPage(1);
               }}>
                 <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Actividad" />
+                  <SelectValue placeholder="Por página" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="active">Activos</SelectItem>
-                  <SelectItem value="inactive">Inactivos</SelectItem>
+                  <SelectItem value="12">12 por página</SelectItem>
+                  <SelectItem value="24">24 por página</SelectItem>
+                  <SelectItem value="50">50 por página</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -263,7 +263,7 @@ const Dashboard = () => {
               <Globe className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">No se encontraron sitios</h3>
               <p className="text-muted-foreground">
-                {searchValue || statusFilter !== "all" || activeFilter !== "all"
+                {searchValue || combinedFilter !== "all"
                   ? "Intenta ajustar los filtros de búsqueda" 
                   : "Agrega tu primer sitio para comenzar el monitoreo"}
               </p>
