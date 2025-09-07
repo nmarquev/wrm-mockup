@@ -49,6 +49,9 @@ interface SiteCardProps {
 
 const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, onToggleActive }: SiteCardProps) => {
   const getStatusIcon = () => {
+    if (!site.isActive) {
+      return <PowerOff className="h-4 w-4 text-muted-foreground" />;
+    }
     switch (site.status) {
       case "success":
         return <CheckCircle className="h-4 w-4 text-success" />;
@@ -60,6 +63,9 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, 
   };
 
   const getStatusBadge = () => {
+    if (!site.isActive) {
+      return <Badge variant="outline" className="border-muted-foreground text-muted-foreground">Inactivo</Badge>;
+    }
     switch (site.status) {
       case "success":
         return <Badge variant="outline" className="border-success text-success">Correcto</Badge>;
