@@ -92,8 +92,7 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, 
   return (
     <Card className={cn(
       "transition-all duration-200 hover:shadow-elevation-lg border-2",
-      getCardStyles(),
-      !site.isActive && "opacity-50 grayscale"
+      getCardStyles()
     )}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
