@@ -92,10 +92,9 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, 
   return (
     <Card className={cn(
       "transition-all duration-200 hover:shadow-elevation-lg border-2",
-      getCardStyles(),
-      !site.isActive && "opacity-50 grayscale"
+      getCardStyles()
     )}>
-      <CardHeader className="pb-3">
+      <CardHeader className={cn("pb-3", !site.isActive && "opacity-50 grayscale")}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {getStatusIcon()}
@@ -119,7 +118,8 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, 
       </CardHeader>
       
       <CardContent className="space-y-4">
-        <div className="text-xs text-muted-foreground">
+        <div className={cn(!site.isActive && "opacity-50 grayscale")}>
+          <div className="text-xs text-muted-foreground">
           Último escaneo: {formatDistanceToNow(site.lastScan, { 
             addSuffix: true, 
             locale: es 
@@ -164,6 +164,7 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, 
           </div>
         </div>
         
+        </div>
         <div className="flex gap-1.5">
           <Button 
             size="sm" 
@@ -178,7 +179,6 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, 
             variant="outline" 
             onClick={() => onViewLogs?.(site.id)}
             title="Ver logs"
-            className={cn(!site.isActive && "!opacity-100 !filter-none hover:bg-accent")}
           >
             <FileSearch className="h-3 w-3" />
           </Button>
@@ -187,7 +187,6 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, 
             variant="outline" 
             onClick={() => onToggleActive?.(site.id)}
             title={site.isActive ? "Desactivar sitio" : "Activar sitio"}
-            className={cn(!site.isActive && "!opacity-100 !filter-none hover:bg-accent")}
           >
             {site.isActive ? (
               <PowerOff className="h-3 w-3" />
@@ -200,7 +199,6 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, 
             variant="outline" 
             onClick={() => onSettings?.(site.id)}
             title="Configuración"
-            className={cn(!site.isActive && "!opacity-100 !filter-none hover:bg-accent")}
           >
             <Settings className="h-3 w-3" />
           </Button>
@@ -209,7 +207,6 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, 
             variant="outline" 
             onClick={() => onDownload?.(site.id)}
             title="Descargar reporte"
-            className={cn(!site.isActive && "!opacity-100 !filter-none hover:bg-accent")}
           >
             <Download className="h-3 w-3" />
           </Button>
@@ -218,7 +215,7 @@ const SiteCard = ({ site, onScan, onSettings, onDownload, onDelete, onViewLogs, 
             variant="outline" 
             onClick={() => onDelete?.(site.id)}
             title="Eliminar sitio"
-            className={cn(!site.isActive && "!opacity-100 !filter-none hover:bg-accent")}
+            
           >
             <Trash2 className="h-3 w-3" />
           </Button>
